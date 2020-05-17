@@ -47,6 +47,9 @@ namespace PDR.PatientBookingApi.Controllers
             if (newBooking.StartTime < DateTime.Now)
                 return StatusCode(406);
 
+            if(_context.Order.Any(x=> x.StartTime.Equals(newBooking.StartTime) && x.DoctorId == newBooking.DoctorId))
+                return StatusCode(406);
+
             _context.Order.AddRange(new List<Order> { newBooking });
             _context.SaveChanges();
 

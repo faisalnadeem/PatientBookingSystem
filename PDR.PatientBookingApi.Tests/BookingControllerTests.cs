@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,59 +15,86 @@ using PDR.PatientBookingApi.Models;
 
 namespace PDR.PatientBookingApi.Tests
 {
-    public class GivenARequestToAddNewBooking
+    public class GivenARequestToAddNewBooking : BookingControllerContext
     {
-        Mock<IPatientBookingContext> _contextMock;
-        Mock<IBookingOrderMapper> _bookingOrderMapperMock;
-        Mock<DbSet<Order>> _ordersDbSetMock;
-        StatusCodeResult _result;
-
         [SetUp]
         public void Setup()
         {
-            _contextMock = new Mock<IPatientBookingContext>();
-            _bookingOrderMapperMock = new Mock<IBookingOrderMapper>();
-            _ordersDbSetMock = new Mock<DbSet<Order>>();
-
-            _contextMock.Setup(x => x.Order).Returns(_ordersDbSetMock.Object);
-            _bookingOrderMapperMock.Setup(x => x.Map(It.IsAny<Booking>())).Returns(new Order { StartTime = DateTime.Now.AddDays(1) });
-
-            var controller = new BookingController(_contextMock.Object, _bookingOrderMapperMock.Object);
-            _result = (StatusCodeResult)controller.AddBooking(new Booking());
+            BookingOrderMapperMock.Setup(x => x.Map(It.IsAny<Booking>())).Returns(new Order { StartTime = DateTime.Now.AddDays(1) });
+            AddBooking(new Booking());
         }
 
         [Test]
         public void ThenBookingShouldBeAddedSuccessfully()
         {
-            Assert.AreEqual(StatusCodes.Status200OK, _result.StatusCode);
+            Assert.AreEqual(StatusCodes.Status200OK, Result.StatusCode);
         }
     }
 
-    public class GivenARequestToAddNewBookingInThePast
+    public class GivenARequestToAddNewBookingInThePast : BookingControllerContext
     {
-        Mock<IPatientBookingContext> _contextMock;
-        Mock<IBookingOrderMapper> _bookingOrderMapperMock;
-        Mock<DbSet<Order>> _ordersDbSetMock;
-        StatusCodeResult _result;
 
         [SetUp]
         public void Setup()
         {
-            _contextMock = new Mock<IPatientBookingContext>();
-            _bookingOrderMapperMock = new Mock<IBookingOrderMapper>();
-            _ordersDbSetMock = new Mock<DbSet<Order>>();
-
-            _contextMock.Setup(x => x.Order).Returns(_ordersDbSetMock.Object);
-            _bookingOrderMapperMock.Setup(x => x.Map(It.IsAny<Booking>())).Returns(new Order());
-
-            var controller = new BookingController(_contextMock.Object, _bookingOrderMapperMock.Object);
-            _result = (StatusCodeResult)controller.AddBooking(new Booking());
+            BookingOrderMapperMock.Setup(x => x.Map(It.IsAny<Booking>())).Returns(new Order { StartTime = DateTime.Now.AddDays(-1) });
+            AddBooking(new Booking());
         }
 
         [Test]
         public void ThenBookingShouldNotBeAddedSuccessfully()
         {
-            Assert.AreEqual(StatusCodes.Status406NotAcceptable, _result.StatusCode);
+            Assert.AreEqual(StatusCodes.Status406NotAcceptable, Result.StatusCode);
         }
     }
+
+    public class GivenARequestToAddDoubleBookingWithSameDoctorAtSameTime : BookingControllerContext
+    {
+        [SetUp]
+        public void Setup()
+        {
+            BookingOrderMapperMock.Setup(x => x.Map(It.IsAny<Booking>())).Returns(ExistingOrder);
+            AddBooking(new Booking());
+        }
+
+        [Test]
+        public void ThenBookingShouldNotBeAddedSuccessfully()
+        {
+            Assert.AreEqual(StatusCodes.Status406NotAcceptable, Result.StatusCode);
+        }
+    }
+
+    public class BookingControllerContext
+    {
+        protected Mock<IPatientBookingContext> ContextMock;
+        protected Mock<IBookingOrderMapper> BookingOrderMapperMock;
+        protected Mock<DbSet<Order>> OrdersDbSetMock;
+        protected StatusCodeResult Result;
+        protected Order ExistingOrder;
+
+        public BookingControllerContext()
+        {
+            ContextMock = new Mock<IPatientBookingContext>();
+            BookingOrderMapperMock = new Mock<IBookingOrderMapper>();
+            OrdersDbSetMock = new Mock<DbSet<Order>>();
+
+            ExistingOrder = new Order { StartTime = DateTime.Now.AddDays(1), DoctorId = 1 };
+            var orders = new List<Order> {ExistingOrder}.AsQueryable();
+
+            OrdersDbSetMock.As<IQueryable<Order>>().Setup(x => x.Provider).Returns(orders.Provider);
+            OrdersDbSetMock.As<IQueryable<Order>>().Setup(x => x.Expression).Returns(orders.Expression);
+            OrdersDbSetMock.As<IQueryable<Order>>().Setup(x => x.ElementType).Returns(orders.ElementType);
+            OrdersDbSetMock.As<IQueryable<Order>>().Setup(x => x.GetEnumerator()).Returns(orders.GetEnumerator());
+            ContextMock.Setup(x => x.Order).Returns(OrdersDbSetMock.Object);
+
+
+        }
+
+        public void AddBooking(Booking booking)
+        {
+            var controller = new BookingController(ContextMock.Object, BookingOrderMapperMock.Object);
+            Result = (StatusCodeResult)controller.AddBooking(booking);
+        }
+    }
+
 }
