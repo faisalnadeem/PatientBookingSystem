@@ -33,7 +33,9 @@ namespace PDR.PatientBookingApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PatientBookingApi", Version = "v1" });
             });
 
+            services.AddScoped<IPatientBookingContext, PatientBookingContext>();
             services.RegisterPatientBookingServices();
+            services.RegisterApiModelMappers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
