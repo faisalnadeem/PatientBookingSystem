@@ -43,9 +43,11 @@ namespace PDR.PatientBookingApi.Controllers
         [HttpPost()]
         public IActionResult AddBooking(Booking booking)
         {
-            var myBooking = _bookingOrderMapper.Map(booking);
+            var newBooking = _bookingOrderMapper.Map(booking);
+            if (newBooking.StartTime < DateTime.Now)
+                return StatusCode(406);
 
-            _context.Order.AddRange(new List<Order> { myBooking });
+            _context.Order.AddRange(new List<Order> { newBooking });
             _context.SaveChanges();
 
             return StatusCode(200);
