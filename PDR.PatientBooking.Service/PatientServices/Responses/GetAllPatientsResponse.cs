@@ -1,6 +1,6 @@
-﻿using PDR.PatientBooking.Service.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using PDR.PatientBooking.Service.Common.Enums;
 
 namespace PDR.PatientBooking.Service.PatientServices.Responses
 {

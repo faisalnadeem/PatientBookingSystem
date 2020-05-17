@@ -1,14 +1,10 @@
-﻿using PDR.PatientBooking.Service.Enums;
-using System;
+﻿using System;
+using PDR.PatientBooking.Service.Common.Enums;
+using PDR.PatientBooking.Service.Common.Requests;
 
 namespace PDR.PatientBooking.Service.DoctorServices.Requests
 {
-    public class AddDoctorRequest
+    public class AddDoctorRequest : BasePersonRequest
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public DateTime DateOfBirth { get; set; }
-        public Gender Gender { get; set; }
-        public string Email { get; set; }
     }
 }

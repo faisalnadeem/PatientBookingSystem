@@ -1,4 +1,4 @@
-﻿namespace PDR.PatientBooking.Service.Enums
+﻿namespace PDR.PatientBooking.Service.Common.Enums
 {
     public enum Gender
     {

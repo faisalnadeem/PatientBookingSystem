@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using AutoFixture;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -9,12 +8,12 @@ using Moq;
 using NUnit.Framework;
 using PDR.PatientBooking.Data;
 using PDR.PatientBooking.Data.Models;
-using PDR.PatientBooking.Service.Enums;
+using PDR.PatientBooking.Service.Common.Enums;
+using PDR.PatientBooking.Service.Common.Validation;
 using PDR.PatientBooking.Service.PatientServices;
 using PDR.PatientBooking.Service.PatientServices.Requests;
 using PDR.PatientBooking.Service.PatientServices.Responses;
 using PDR.PatientBooking.Service.PatientServices.Validation;
-using PDR.PatientBooking.Service.Validation;
 
 namespace PDR.PatientBooking.Service.Tests.PatientServices
 {
@@ -109,7 +108,7 @@ namespace PDR.PatientBooking.Service.Tests.PatientServices
             _patientService.AddPatient(request);
 
             //assert
-            _context.Patient.Should().ContainEquivalentOf(expected, options => options.Excluding(patient => patient.Id));
+            _context.Patient.Should().ContainEquivalentOf(expected, options => options.Excluding(patient => patient.Id).Excluding(patient => patient.Created));
         }
 
         [Test]

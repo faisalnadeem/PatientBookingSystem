@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PDR.PatientBooking.Service.Validation
+namespace PDR.PatientBooking.Service.Common.Validation
 {
     public class PdrValidationResult
     {

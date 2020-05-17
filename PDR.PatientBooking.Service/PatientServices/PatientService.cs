@@ -1,13 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PDR.PatientBooking.Data;
 using PDR.PatientBooking.Data.Models;
-using PDR.PatientBooking.Service.Enums;
 using PDR.PatientBooking.Service.PatientServices.Requests;
 using PDR.PatientBooking.Service.PatientServices.Responses;
 using PDR.PatientBooking.Service.PatientServices.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PDR.PatientBooking.Service.Common.Enums;
 
 namespace PDR.PatientBooking.Service.PatientServices
 {

@@ -1,5 +1,5 @@
 ﻿using PDR.PatientBooking.Service.ClinicServices.Requests;
-using PDR.PatientBooking.Service.Validation;
+using PDR.PatientBooking.Service.Common.Validation;
 
 namespace PDR.PatientBooking.Service.ClinicServices.Validation
 {

@@ -9,11 +9,11 @@ using PDR.PatientBooking.Service.DoctorServices;
 using PDR.PatientBooking.Service.DoctorServices.Requests;
 using PDR.PatientBooking.Service.DoctorServices.Responses;
 using PDR.PatientBooking.Service.DoctorServices.Validation;
-using PDR.PatientBooking.Service.Enums;
-using PDR.PatientBooking.Service.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PDR.PatientBooking.Service.Common.Enums;
+using PDR.PatientBooking.Service.Common.Validation;
 
 namespace PDR.PatientBooking.Service.Tests.DoctorServices
 {
@@ -107,7 +107,7 @@ namespace PDR.PatientBooking.Service.Tests.DoctorServices
             _doctorService.AddDoctor(request);
 
             //assert
-            _context.Doctor.Should().ContainEquivalentOf(expected, options => options.Excluding(doctor => doctor.Id));
+            _context.Doctor.Should().ContainEquivalentOf(expected, options => options.Excluding(doctor => doctor.Id).Excluding(doctor => doctor.Created));
         }
 
         [Test]

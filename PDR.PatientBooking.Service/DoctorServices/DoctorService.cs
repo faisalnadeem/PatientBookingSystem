@@ -4,10 +4,10 @@ using PDR.PatientBooking.Data.Models;
 using PDR.PatientBooking.Service.DoctorServices.Requests;
 using PDR.PatientBooking.Service.DoctorServices.Responses;
 using PDR.PatientBooking.Service.DoctorServices.Validation;
-using PDR.PatientBooking.Service.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PDR.PatientBooking.Service.Common.Enums;
 
 namespace PDR.PatientBooking.Service.DoctorServices
 {

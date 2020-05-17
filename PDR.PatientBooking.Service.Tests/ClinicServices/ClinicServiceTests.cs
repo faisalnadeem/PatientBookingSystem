@@ -9,10 +9,10 @@ using PDR.PatientBooking.Service.ClinicServices;
 using PDR.PatientBooking.Service.ClinicServices.Requests;
 using PDR.PatientBooking.Service.ClinicServices.Responses;
 using PDR.PatientBooking.Service.ClinicServices.Validation;
-using PDR.PatientBooking.Service.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PDR.PatientBooking.Service.Common.Validation;
 
 namespace PDR.PatientBooking.Service.Tests.ClinicServices
 {

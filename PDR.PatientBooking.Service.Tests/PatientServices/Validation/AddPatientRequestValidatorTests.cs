@@ -183,7 +183,7 @@ namespace PDR.PatientBooking.Service.Tests.PatientServices.Validation
             request.ClinicId++; //offset clinicId
 
             //act
-            var res = _addPatientRequestValidator.ValidateRequest(_fixture.Create<AddPatientRequest>());
+            var res = _addPatientRequestValidator.ValidateRequest(request);
 
             //assert
             res.PassedValidation.Should().BeFalse();
